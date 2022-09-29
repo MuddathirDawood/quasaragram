@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-white" bordered>
-      <q-toolbar class="text-grey-10">
+      <q-toolbar class="text-grey-10 constrain">
         <q-btn class="large-screen-only q-mr-sm" flat round color="text-grey-10" icon="home" size="18px" dense to="/"/>
         <q-separator vertical spaced class="large-screen-only"/>
         <q-toolbar-title class="text-grand-hotel text-bold">
@@ -39,7 +39,8 @@ export default defineComponent({
 
 <style lang="sass">
 .q-toolbar
-  height: 77px
+  @media (min-width: $breakpoint-sm-min)
+    height: 77px
 .q-toolbar__title
   font-size: 30px
   @media (max-width: $breakpoint-xs-max)
