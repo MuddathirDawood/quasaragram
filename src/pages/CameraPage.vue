@@ -1,10 +1,11 @@
 <template>
   <q-page class="constrain-camera-frame q-pa-md">
     <div class="camera-frame q-pa-md">
-      <img src="https://cdn.quasar.dev/img/parallax1.jpg" class="full-width">
+      <video class="full-width" autoplay playsinline ref="video" v-show="!imageCaptured"/>
+      <canvas ref="canvas" class="full-width" height="240" v-show="imageCaptured"/>
     </div>
     <div class="text-center">
-      <q-btn round color="grey-10" icon="camera"/>
+      <q-btn round color="grey-10" icon="camera" @click="captureImg"/>
     </div>
     <div class="row justify-center q-ma-md">
       <q-input v-model="post.caption" class="col col-sm-8" label="Caption" dense/>
@@ -25,6 +26,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { uid } from 'quasar'
+require('md-gum-polyfill')
 
 export default defineComponent({
   name: 'CameraPage',
@@ -36,8 +38,30 @@ export default defineComponent({
         location: '',
         image: null,
         date: Date.now()
-      }
+      },
+      imageCaptured: false
     }
+  },
+  methods:{
+    initCamera(){
+      navigator.mediaDevices.getUserMedia({
+        video: true
+      }).then(stream => {
+        this.$refs.video.srcObject = stream
+      })
+    },
+    captureImg(){
+      let video = this.$refs.video
+      let canvas = this.$refs.canvas
+      canvas.width = video.getBoundingClientRect().width
+      canvas.height = video.getBoundingClientRect().height
+      let context = canvas.getContext('2d')
+      context.drawImage(video, 0, 0, canvas.width, canvas.height)
+      this.imageCaptured = true
+    }
+  },
+  mounted(){
+    this.initCamera()
   }
 })
 </script>
