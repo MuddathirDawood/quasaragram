@@ -16,9 +16,9 @@
       <q-input v-model="post.caption" class="col col-sm-8" label="Caption" dense/>
     </div>
     <div class="row justify-center q-ma-md">
-      <q-input v-model="post.location" class="col col-sm-8" label="Location" dense>
+      <q-input v-model="post.location" :loading="locLoading" class="col col-sm-8" label="Location" dense>
         <template v-slot:append>
-          <q-btn round dense flat icon="eva-navigation-2-outline" @click="getLocation"/>
+          <q-btn round dense flat icon="eva-navigation-2-outline" @click="getLocation" v-if="!locLoading && locationSupport"/>
         </template>
       </q-input>
     </div>
@@ -46,7 +46,17 @@ export default defineComponent({
       },
       imageCaptured: false,
       imageUpload: [],
-      enabledCamera: true
+      enabledCamera: true,
+      locLoading: false
+    }
+  },
+  computed:{
+    locationSupport(){
+      if ('geolocation' in navigator){
+        return true
+      }else{
+        return false
+      }
     }
   },
   methods:{
@@ -104,7 +114,40 @@ export default defineComponent({
         track.stop()
       })
     },
-
+    getLocation(){
+      this.locLoading = true
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.getCityAndCountry(pos)
+      }, err => {
+        this.locationError()
+      }, { timeout: 7000 })
+    },
+    getCityAndCountry(position){
+      let apiUrl = `https://geocode.xyz/${position.coords.latitude},${position.coords.longitude}?json=1`
+      fetch(apiUrl)
+      .then(res => res.json())
+      .then(results => {
+        console.log('Result ', results);
+        this.locationSuccess(results)
+      })
+      .catch(err => {
+        this.locationError()
+      })
+    },
+    locationSuccess(result){
+      this.locLoading = false
+      this.post.location = result.city
+      if (result.country) {
+        this.post.location += `, ${result.country}`
+      }
+    },
+    locationError(){
+      this.$q.dialog({
+        title: 'Error',
+        message: 'Could not find your location'
+      })
+      this.locLoading = false
+    }
   },
   mounted(){
     this.initCamera()
