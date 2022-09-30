@@ -6,7 +6,7 @@
       <q-item>
         <q-item-section avatar>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            <img src="https://i.postimg.cc/4djWHWZj/triforce-gmail.jpg">
           </q-avatar>
         </q-item-section>
 
@@ -30,7 +30,7 @@
         <q-item class="fixed">
         <q-item-section avatar>
           <q-avatar size="50px">
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            <img src="https://i.postimg.cc/4djWHWZj/triforce-gmail.jpg">
           </q-avatar>
         </q-item-section>
 
