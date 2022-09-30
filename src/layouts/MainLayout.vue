@@ -41,6 +41,11 @@ export default defineComponent({
 .q-toolbar
   @media (min-width: $breakpoint-sm-min)
     height: 77px
+.q-toolbar
+  .q-btn
+    @media (min-width: $breakpoint-sm-min)
+      display: flex
+      align-items: center
 .q-toolbar__title
   font-size: 30px
   @media (max-width: $breakpoint-xs-max)
