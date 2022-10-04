@@ -8,6 +8,8 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 
+let API_LOCAL = 'http://localhost:3000'
+let API_PRODUCTION = 'https://quasaragram-api.herokuapp.com'
 
 const { configure } = require('quasar/wrappers');
 
@@ -48,6 +50,9 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
+      env:{
+        API: API_LOCAL // API_LOCAL | API_PRODUCTION
+      },
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
       // transpile: false,
@@ -98,7 +103,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Dialog']
+      plugins: ['Dialog','Notify','Loading']
     },
 
     // animations: 'all', // --- includes all animations

@@ -5,7 +5,7 @@
       <canvas ref="canvas" class="full-width" height="240" v-show="imageCaptured"/>
     </div>
     <div class="text-center q-pa-md">
-      <q-btn round color="grey-10" icon="camera" @click="captureImg" v-if="enabledCamera"/>
+      <q-btn round color="grey-10" icon="camera" @click="captureImg" v-if="enabledCamera" :disable="imageCaptured"/>
       <q-file outlined v-model="imageUpload" v-else label="Choose An Image" accept="image/*" @input="capImgFallback">
         <template v-slot:prepend>
           <q-icon name="eva-attach-outline" />
@@ -13,7 +13,7 @@
       </q-file>
     </div>
     <div class="row justify-center q-ma-md">
-      <q-input v-model="post.caption" class="col col-sm-8" label="Caption" dense/>
+      <q-input v-model="post.caption" class="col col-sm-8" label="Caption *" dense required/>
     </div>
     <div class="row justify-center q-ma-md">
       <q-input v-model="post.location" :loading="locLoading" class="col col-sm-8" label="Location" dense>
@@ -23,7 +23,7 @@
       </q-input>
     </div>
     <div class="row justify-center q-mt-lg">
-      <q-btn unelevated rounded color="grey-10">Post Image</q-btn>
+      <q-btn unelevated rounded color="grey-10" @click="addPost()" :disable="!post.caption && !post.photo">Post Image</q-btn>
     </div>
   </q-page>
 </template>
@@ -147,6 +147,41 @@ export default defineComponent({
         message: 'Could not find your location'
       })
       this.locLoading = false
+    },
+    addPost(){
+      this.$q.loading.show({
+          message: 'Request is in progress. Processing...'
+        })
+
+      let formData = new FormData()
+      formData.append('id', this.post.id)
+      formData.append('caption', this.post.caption)
+      formData.append('location', this.post.location)
+      formData.append('date', this.post.date)
+      formData.append('file', this.post.image, this.post.id + '.png')
+
+      fetch(`${process.env.API}/createPosts`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        this.$router.push('/')
+        this.$q.notify({
+          message: 'Post Created!',
+          actions: [{label: 'Dismiss', color: 'white'}]
+        })
+        this.$q.loading.hide()
+      })
+      .catch(err => {
+        console.log('Err: ', err);
+        this.$q.dialog({
+        title: 'Error',
+        message: 'Sorry could not create new post!'
+      })
+      this.$q.loading.hide()
+      })
     }
   },
   mounted(){

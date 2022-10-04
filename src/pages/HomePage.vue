@@ -47,13 +47,14 @@
               </q-item-section>
             </q-item>
 
-            <q-skeleton height="200px" square animation="fade" />
+            <q-skeleton height="350px" square animation="fade" />
 
             <q-card-section>
               <q-skeleton type="text" class="text-subtitle2" animation="fade" />
               <q-skeleton type="text" width="50%" class="text-subtitle2" animation="fade" />
             </q-card-section>
           </q-card>
+
         </template>
       </div>
       <div class="col-4 large-screen-only">
@@ -95,7 +96,7 @@ export default defineComponent({
     },
     getPosts(){
       this.loadingPosts = true
-      fetch('https://quasaragram-api.herokuapp.com/posts')
+      fetch(`${process.env.API}/posts`)
       .then(res => res.json())
       .then(data => {
         this.posts = data.posts
