@@ -51,7 +51,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       env:{
-        API: API_LOCAL // API_LOCAL | API_PRODUCTION
+        API: API_PRODUCTION // API_LOCAL | API_PRODUCTION
       },
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
